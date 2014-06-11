@@ -42,31 +42,36 @@ end
 
 
 
+OPENER_AND_CLOSER_PAIRS = {
+  '(' => ')',
+  '[' => ']',
+  '{' => '}'
+}.freeze
+
 def braces_recursive(array_of_braces_strings)
   array_of_braces_strings.each do |str|
-    split_str = str.split('')
-    deepest_level = []
-    recursive_it(split_str, deepest_level)
+    recurse_each_string(str.split(''))
   end
 end
 
-def recursive_it(split_str, deepest_level)
-  opener_and_closer_pairs = {
-    '(' => ')',
-    '[' => ']',
-    '{' => '}'
-  }
+def recurse_each_string(split_str, deepest_level=[])
   char = split_str.shift
-  if char.nil? && deepest_level.empty?
-    puts 1
-  elsif char == '(' || char == '[' || char == '{'
-    deepest_level << opener_and_closer_pairs[char]
-    recursive_it(split_str, deepest_level)
-  elsif deepest_level.pop == char
-    recursive_it(split_str, deepest_level)
-  else
-    puts 0
+  if end_of_string?(char, deepest_level)
+    return puts 1
+  elsif open_brace?(char)
+    deepest_level << OPENER_AND_CLOSER_PAIRS[char]
+  elsif deepest_level.pop != char
+    return puts 0
   end
+  recurse_each_string(split_str, deepest_level)
+end
+
+def end_of_string?(char, deepest_level)
+  char.nil? && deepest_level.empty?
+end
+
+def open_brace?(char)
+  OPENER_AND_CLOSER_PAIRS.keys.include? char
 end
 
 
