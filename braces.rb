@@ -40,5 +40,36 @@ def check_braces_hash_for_equal_opening_and_closing_braces(braces_hash)
   end
 end
 
+
+
+def braces_recursive(array_of_braces_strings)
+  array_of_braces_strings.each do |str|
+    split_str = str.split('')
+    deepest_level = []
+    recursive_it(split_str, deepest_level)
+  end
+end
+
+def recursive_it(split_str, deepest_level)
+  opener_and_closer_pairs = {
+    '(' => ')',
+    '[' => ']',
+    '{' => '}'
+  }
+  char = split_str.shift
+  if char.nil? && deepest_level.empty?
+    puts 1
+  elsif char == '(' || char == '[' || char == '{'
+    deepest_level << opener_and_closer_pairs[char]
+    recursive_it(split_str, deepest_level)
+  elsif deepest_level.pop == char
+    recursive_it(split_str, deepest_level)
+  else
+    puts 0
+  end
+end
+
+
 test = ")(){}","[]({})","([])","{()[]}","([)]", "(", "((())"
 braces(test)
+braces_recursive(test)
